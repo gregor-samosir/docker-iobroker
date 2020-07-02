@@ -9,11 +9,9 @@
 [![License](https://img.shields.io/github/license/buanet/docker-iobroker)](https://github.com/buanet/docker-iobroker/blob/master/LICENSE.md)
 [![Donate](https://img.shields.io/badge/donate-paypal-blue)](https://paypal.me/buanet)
 
-IoBroker for Docker is a ready to use Docker image for ioBroker IoT platform (http://www.iobroker.net).
+IoBroker for Docker is a Docker image for ioBroker IoT platform (http://www.iobroker.net).
 
-It was originally created for a Synology Disk Station 1515+ with DSM 6 and official Docker package installed but should run on any other Linux based Docker host too.
-
-After more than three years of development it might be the best documented and still maintained Docker image for running ioBroker IoT platform with Docker.
+It was originally created for a Synology Disk Station 1515+ with DSM 6 and official Docker package installed. After more than three years of development it might be the best documented and still maintained Docker image for running ioBroker IoT platform with Docker.
 
 Since v4.0.0 the image is available for the following architectures: amd64, armv7hf, aarch64.<br>
 If you need more please let me know by opening a Github issue.
