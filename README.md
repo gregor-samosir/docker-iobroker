@@ -18,9 +18,11 @@ If you need more please let me know by opening a Github issue.
 
 ## Important notice
 
-Normally a new major version (e.g. v2, v4 and upcoming v5) of the image comes with a new, preinstalled major node version!
+Normally a new major version (e.g. v2, v4, v5) of the image comes with a new, preinstalled major node version!
 If you are updating an existing installation to a new major version (e.g. from v4 to v5) you have to perform some additional steps inside ioBroker! For more details please see official ioBroker documentation: [EN](https://www.iobroker.net/#en/documentation/install/updatenode.md) | [DE](https://www.iobroker.net/#de/documentation/install/updatenode.md).<br>
+
 You might avoid these procedure if you use my "Best practice" hint for "upgrading your ioBroker container".<br>
+
 In any case make a backup first!
 
 By the way, a more comfortable way is to use "iobroker backup" to create a full backup of your existing installation and copy it into a empty folder which you will mount to /opt/iobroker when setting up a new container. The startup script will automatically detect the backup file and restore it to the new container. For more details see "Mounting folder/ volume" section of this readme.md file.
@@ -72,32 +74,32 @@ You do not have to declare every single variable when setting up your container.
 
 **Important: In v4.2.0 the ENVs "ADMINPORT" and "REDIS" were renamed/ reorganized. For Details see the following table!**
 
-|env|default|description|
+|ENV|Default|Description|
 |---|---|---|
 |AVAHI|false|Installs and activates avahi-daemon for supporting yahka-adapter, can be "true" or "false"|
 |IOB_ADMINPORT|8081|Sets ioBroker adminport on startup|
-|IOB_MULTIHOST|master|Sets ioBroker instance as "master" or "slave" for multihost (additional config for objectsdb and statesdb needed)|
-|IOB_OBJECTSDB_HOST|127.0.0.1|Sets hostname for ioBroker objects db|
+|IOB_MULTIHOST|[not set]|Sets ioBroker instance as "master" or "slave" for multihost support (needs additional config for objectsdb and statesdb!)|
+|IOB_OBJECTSDB_HOST|127.0.0.1|Sets host for ioBroker objects db|
 |IOB_OBJECTSDB_PORT|9001|Sets port for ioBroker objects db|
 |IOB_OBJECTSDB_TYPE|file|Sets type of ioBroker objects db, cloud be "file", "redis" or "couch"|
-|IOB_STATESDB_HOST|127.0.0.1|Sets hostname for ioBroker states db|
+|IOB_STATESDB_HOST|127.0.0.1|Sets host for ioBroker states db|
 |IOB_STATESDB_PORT|9000|Sets port for ioBroker states db|
 |IOB_STATESDB_TYPE|file|Sets type of ioBroker states db, could be "file" or "redis"|
 |LANG|de_DE.UTF&#x2011;8|The following locales are pre-generated: de_DE.UTF-8, en_US.UTF-8|
 |LANGUAGE|de_DE:de|The following locales are pre-generated: de_DE:de, en_US:en|
 |LC_ALL|de_DE.UTF-8|The following locales are pre-generated: de_DE.UTF-8, en_US.UTF-8|
-|PACKAGES|vi|Installs additional packages to your container needed by some adapters, packages should be seperated by whitespace like "package1 package2 package3"|
-|SETGID|1000|For security reasons it might be useful to specify the gid of the containers iobroker user to match an existing group on the docker host|
-|SETUID|1000|For security reasons it might be useful to specify the uid of the containers iobroker user to match an existing user on the docker host|
+|PACKAGES|[not set]|Installs additional linux packages to your container, packages should be seperated by whitespace like this: "package1 package2 package3"|
+|SETGID|1000|For some reasons it might be useful to specify the gid of the containers iobroker user to match an existing group on the docker host|
+|SETUID|1000|For some reasons it might be useful to specify the uid of the containers iobroker user to match an existing user on the docker host|
 |TZ|Europe/Berlin|All valid Linux-timezones|
-|USBDEVICES|none|Sets relevant permissions on mounted devices like "/dev/ttyACM0", for more than one device separate with ";" like "/dev/ttyACM0;/dev/ttyACM1"|
+|USBDEVICES|none|Sets relevant permissions on mounted devices like "/dev/ttyACM0", for more than one device separate with ";" like this: "/dev/ttyACM0;/dev/ttyACM1"|
 |ZWAVE|false|Will install openzwave to support zwave-adapter, can be "true" or "false"|
 
 ### Mounting folder/ volume
 
 It is possible to mount an empty folder to /opt/iobroker during first startup of the container. The startup script will check this folder and restore content if it is empty.
-Since v4.1.0 it is also possible mount a folder filled up with an iobroker backup file (for example created with backitup adapter) named like this: "iobroker_2020_01_06-01_09_10_backupiobroker.tar.gz".
-The startup script will detect this backup and restore it during the start of the container. Please see container logs when starting the container for more details!
+Since v4.1.0 it is also possible mount a folder filled up with an iobroker backup file created using "iobroker backup" command or backitup adapter. Please take care of the name of your backup file ending like this: "*_backupiobroker.tar.gz".
+The startup script will then detect this backup and restore it during the start of the container. Please see container logs when starting the container for more details!
 
 Note: It is absolutely recommended to use a mounted folder or persistent volume for /opt/iobroker folder!
 
@@ -131,7 +133,7 @@ Details will follow soon.
 To avoid conflicts when upgrading your container or getting in trouble when accidentally upgrading your container to a new major version I prefer using the version tag like "V4.2.0" instead of "latest" for creating your container. Just think about when I tell you it is not possible to download a new image version of a specific tag as long as a container depends on it.<br>
 By the way it also makes it more safe to keep your image up to date by using "watchtower" or something like that.
 
-### Upgrading you container
+### Upgrading your container
 
 If you want to upgrade your ioBroker container to a new major version (e.g. from v4 to v5) I would prefer to do that by creating a backup in ioBroker (by "iobroker backup" or backitup adapter) and restoring it to a completely new container. All you need is time an the following steps:
 * make a backup by command line ("iobroker backup") or backitup adapter
@@ -162,13 +164,20 @@ Thank you!
 
 ## Changelog
 
-### v4.2.4beta (2020-06-23)
-* added graceful shutdown
-* small fix for GID/UID handling
-* adding new ENV "IOB_MULTIHOST" for multihost support
-* small syntax fixes in iobroker_startup.sh
+### v5.0.1beta (2020-07-01)
+* fixing backup detection in startup script
+* fixing permission issue on iobroker restored
+* extended Logging
+* optimize multihost support
+
+### v5.0.0 (2020-06-29)
+* v4.2.4beta (2020-06-23)
+  * added graceful shutdown
+  * small fix for GID/UID handling
+  * adding new ENV "IOB_MULTIHOST" for multihost support
+  * small syntax fixes in iobroker_startup.sh
 * v4.2.3beta (2020-06-05)
-  * updating js-controller to not stable version 3.1.5 to fix renaming issue
+  * ~~updating js-controller to not stable version 3.1.5 to fix renaming issue~~ (is stable now)
 * v4.2.2beta (2020-06-03)
   * ~~workaround for renaming issues on startup~~ (fixed in js-controller)
 * v4.2.1beta (2020-05-10)
